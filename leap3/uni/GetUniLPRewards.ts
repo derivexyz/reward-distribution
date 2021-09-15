@@ -28,7 +28,6 @@ async function main() {
   }
 
   const mintBlockNumbers = mints.map((x: any) => x.blockNumber);
-  // Only
   const mintTransfers = transfers.filter((x: any) => mintBlockNumbers.includes(x.blockNumber));
   const tokenIds = mintTransfers.map((x: any) => x.tokenId);
 
@@ -68,7 +67,7 @@ async function main() {
 
   const perUserData: any = {}
   const totalLyra = 375000;
-  const lyraPerEpoch = totalLyra / snapshotBlocks.length;
+  const lyraPerEpoch = totalLyra / 112;
   let lastPeriod;
   let secondLastPeriod;
 
@@ -140,7 +139,7 @@ async function main() {
       }
 
       // We ignore any liquidity that is not in the specified range
-      if (token.tickLower !== -100 || token.tickUpper !== 2620) {
+      if (token.tickLower != -100 || token.tickUpper != 2620) {
         isEarning = false;
         inRange = false;
       }
@@ -201,12 +200,6 @@ async function main() {
 
       if (tokenInfo.isEarning && !tokenInfo.isPending) {
         const amountTokens = lyraPerEpoch * tokenInfo.tokenLiquidity / results[resId].totalLiquidity;
-        console.log({
-          lyraPerEpoch,
-          amountTokens,
-          tokenLiq: tokenInfo.tokenLiquidity,
-          totalLiq: results[resId].totalLiquidity
-        })
         perUserData[owner].totalAmount += amountTokens
         perUserData[owner].periods[resId].totalRewardForPeriod += amountTokens;
         perUserData[owner].periods[resId].totalEarningLiquidity += tokenInfo.tokenLiquidity;
@@ -226,13 +219,10 @@ async function main() {
       })
     }
   }
-  console.log("Logging rewards:");
+  console.log("data collected");
   for (const i in perUserData) {
-    if (perUserData[i].totalAmount > 0) {
-      console.log(`${i} to receive ${perUserData[i].totalAmount} Lyra`);
-    }
+    console.log(`${i} receives ${perUserData[i].totalAmount} Lyra`)
   }
-
   // To get the info about an individual user:
   // console.log(perUserData['0x12345...'])
 }
