@@ -3,16 +3,20 @@
   "version": "1.0.0",
   "description": "Collection of scripts to help with reward distribution computation",
   "scripts": {
-    "leap3:uni": "OVM_RPC_URL=https://mainnet.optimism.io ts-node leap3/uni/GetUniLPRewards.ts"
+    "leap3:uni": "OVM_RPC_URL=https://mainnet.optimism.io ts-node scripts/leap3/uni.ts",
+    "leap3:lyra-sETH": "OVM_RPC_URL=https://mainnet.optimism.io ts-node scripts/leap3/lyra.ts",
+    "leap4:uni": "OVM_RPC_URL=https://mainnet.optimism.io ts-node scripts/leap4/uni.ts"
   },
   "author": "Lyra Finance",
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
+    "@types/better-sqlite3": "^7.4.0",
     "@types/node": "^13.13.52",
     "axios": "^0.19.2",
-    "ethers": "^5.0.3",
     "better-sqlite3": "^7.4.3",
+    "chalk": "^4.1.2",
+    "ethers": "^5.0.3",
     "ts-node": "^8.8.2",
     "typescript": "^3.8.3"
   }

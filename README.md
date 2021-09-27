@@ -2,6 +2,11 @@
 
 Collection of scripts to help compute reward distributions.
 
+Before running anything, you must install all dependencies.
+```
+yarn install
+```
+
 ## LEAP-3
 
 https://leaps.lyra.finance/leaps/leap-3/
@@ -11,11 +16,10 @@ https://leaps.lyra.finance/leaps/leap-3/
 To run the uniswap LP reward script:
 
 ```
-yarn install
-yarn leap3:uniswap
+yarn leap3:uni
 ```
 
-## Method
+### Method
 
 Rewards are computed in 3 hour rounds by taking a snapshot at the first block past every 3hr mark from the starting snapshot. The starting block is the first block after the 13th Sept 00:00 UTC, the second is the first block after 03:00 UTC, and so on. The last snapshot will be the first block after 27 September 00:00 UTC. This means that the time between snapshots can vary, however the rewards will remain constant. Rewards per 3hr “round” will be 3348.2 lyra (37500 lyra / 112 rounds total).
 
@@ -32,3 +36,24 @@ They have been transferred/minted/burned in that round
 They have increased/decreased liquidity in that round
 
 The total liquidity of all NFTs that pass the above checks is computed, and then the rewards for that round are distributed based on each individual NFT’s liquidity in that round (i.e. an NFT with more liquidity will get a proportionally larger share).
+
+
+### Lyra LP reward script
+
+To run the lyra option market LP reward script:
+
+```
+yarn leap3:lyra-sETH
+```
+
+## LEAP-4
+
+https://leaps.lyra.finance/leaps/leap-4/
+
+```
+yarn leap4:uni
+```
+
+### Method
+
+As above, just with different start/end times as well as different tick ranges, as specified in the LEAP.
