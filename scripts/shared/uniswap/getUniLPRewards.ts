@@ -222,13 +222,15 @@ export async function getUniLPRewards(startDate: number, endDate: number, epochD
   }
   console.log("data collected");
   let count = 0;
+  let total = 0;
   for (const i in perUserData) {
     if (perUserData[i].totalAmount > 0) {
-      console.log(`${i} receives ${perUserData[i].totalAmount} Lyra`)
+      console.log(i, perUserData[i].totalAmount)
       count += 1;
+      total += perUserData[i].totalAmount
     }
   }
-  console.log({count});
+  console.log({count, total});
   // To get the info about an individual user:
   // console.log(perUserData['0x12345...'])
 }

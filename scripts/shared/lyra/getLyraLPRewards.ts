@@ -72,12 +72,14 @@ export async function getLyraLPRewards(roundMaxExpiryTimestamp: number, totalRew
   }
 
   let count = 0;
+  let total = 0;
   for (const owner in perOwner) {
     perOwner[owner].totalReward = perOwner[owner].totalLiquidity * totalRewards / totalValue;
     if (perOwner[owner].totalReward > 0) {
       console.log(owner, perOwner[owner].totalReward);
       count += 1;
+      total += perOwner[owner].totalReward;
     }
   }
-  console.log({count})
+  console.log({count, total})
 }
