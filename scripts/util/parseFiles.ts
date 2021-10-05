@@ -2,8 +2,8 @@
 /* eslint-disable */
 import path from 'path';
 
-export function loadLyraContractData(name: string, market?: string) {
-  const filePath = path.join(__dirname, '../../deployments/mainnet-ovm/lyra.json');
+export function loadLyraContractData(deployment: string, name: string, market?: string) {
+  const filePath = path.join(__dirname, '../../deployments', deployment, 'lyra.json');
   const data = require(filePath);
   try {
     if (market) {
@@ -22,8 +22,8 @@ export function loadLyraContractData(name: string, market?: string) {
   }
 }
 
-export function loadLyraContractDeploymentBlock(name: string, market?: string) {
-  const filePath = path.join(__dirname, '../../deployments/mainnet-ovm/lyra.json');
+export function loadLyraContractDeploymentBlock(deployment: string, name: string, market?: string) {
+  const filePath = path.join(__dirname, '../../deployments', deployment, 'lyra.json');
   const data = require(filePath);
   try {
     if (market) {

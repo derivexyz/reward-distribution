@@ -10,19 +10,17 @@ enum NotEarningReason {
   LiquidityAtZero
 }
 
-
 export async function getUniLPRewards(startDate: number, endDate: number, epochDuration: number, minTick: number, maxTick: number, totalLyra: number) {
-  console.log("Caching block number up to latest, and get round timestamps and block numbers");
   let snapshotBlocks = await getRounds(startDate, endDate, epochDuration);
 
   const [mints, transfers, increaseEvents, decreaseEvents] = await getAllUniEvents()
 
   // Ensure no duplicate transfer at same block number - manually handle if it is an issue
-  // Only one example on a different pool...
+  // Only one example on a different pool (token id 7314)...
   const seen: {[key: number]: any} = {};
   for (const transfer of transfers) {
     if (!!seen[transfer.blockNumber] && seen[transfer.blockNumber].tokenId !== transfer.tokenId) {
-      console.log("DUPLICATE TRANSFER", transfer, seen[transfer.blockNumber]);
+      console.log("- Warn: Duplicate transfer for token:", transfer.tokenId);
     }
     seen[transfer.blockNumber] = transfer;
   }
@@ -68,11 +66,10 @@ export async function getUniLPRewards(startDate: number, endDate: number, epochD
   const perUserData: any = {}
   const numEpochs = Math.floor((endDate - startDate) / epochDuration);
   const lyraPerEpoch = totalLyra / numEpochs;
-  console.log({numEpochs, lyraPerEpoch})
+  console.log(`- ${numEpochs} total epochs, with ${lyraPerEpoch} lyra per epoch`);
   let lastPeriod;
   let secondLastPeriod;
 
-  console.log("computing")
   for (const i of snapshotBlocks) {
     const startSnap = i[0][0];
     const endSnap = i[1][0];
@@ -220,17 +217,17 @@ export async function getUniLPRewards(startDate: number, endDate: number, epochD
       })
     }
   }
-  console.log("data collected");
+  let res: any = {};
   let count = 0;
   let total = 0;
   for (const i in perUserData) {
     if (perUserData[i].totalAmount > 0) {
-      console.log(i, perUserData[i].totalAmount)
+      res[i] = perUserData[i].totalAmount;
       count += 1;
       total += perUserData[i].totalAmount
     }
   }
   console.log({count, total});
-  // To get the info about an individual user:
-  // console.log(perUserData['0x12345...'])
+  console.log();
+  return res;
 }

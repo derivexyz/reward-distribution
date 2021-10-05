@@ -4,15 +4,26 @@ import { loadLyraContractData } from './parseFiles';
 
 const contracts: any = {};
 
-export async function getLyraContract(contractName: string, market?: string): Promise<Contract> {
-  if (!!market && !!contracts.markets && !!contracts.markets[market] && !!contracts.markets[market][contractName]) {
-    return contracts.markets[market][contractName];
-  }
-  if (contracts[contractName]) {
-    return contracts[contractName];
+export async function getLyraContract(deployment: string, contractName: string, market?: string): Promise<Contract> {
+  if (!contracts[deployment]) {
+    contracts[deployment] = {
+      markets: {}
+    }
   }
 
-  const data = loadLyraContractData(contractName, market);
+  if (!!market && !contracts[deployment].markets[market]) {
+    contracts[deployment].markets[market] = {}
+  }
+
+  if (!!market && contracts[deployment].markets[market][contractName]) {
+    return contracts[deployment].markets[market][contractName];
+  }
+
+  if (contracts[deployment][contractName]) {
+    return contracts[deployment][contractName];
+  }
+
+  const data = loadLyraContractData(deployment, contractName, market);
 
   const contract = new Contract(
     data.target.address,
@@ -20,15 +31,9 @@ export async function getLyraContract(contractName: string, market?: string): Pr
     getNetworkProvider(),
   );
   if (market) {
-    if (!contracts.markets) {
-      contracts.markets = {};
-    }
-    if (!contracts.markets[market]) {
-      contracts.markets[market] = {};
-    }
-    contracts.markets[market][contractName] = contract;
+    contracts[deployment].markets[market][contractName] = contract;
   } else {
-    contracts[contractName] = contract;
+    contracts[deployment][contractName] = contract;
   }
 
   return contract;

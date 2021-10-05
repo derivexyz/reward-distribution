@@ -76,12 +76,10 @@ async function getAllEvents(contract: ethers.Contract, filter: ethers.EventFilte
 
 
 async function getAllNftTransfers(startBlock: number, endBlock: number) {
-  console.log(`Fetching all nft transfers between ${startBlock} and ${endBlock}`);
-
   let results = await db.prepare("SELECT * FROM nftTransfer ORDER BY blockNumber").all();
   startBlock = results[results.length - 1]?.blockNumber + 1 || startBlock;
 
-  console.log(`Fetching new events from ${startBlock} to ${endBlock}`);
+  console.log(`- Fetching new nft transfer events from ${startBlock} to ${endBlock}`);
   const newResults = await getAllEvents(uniNftContract, uniNftContract.filters.Transfer(null, null, null), startBlock, endBlock);
 
   const statement = await db.prepare("INSERT INTO nftTransfer (blockNumber, tokenId, fromAddr, toAddr) VALUES (?, ?, ?, ?)");
@@ -98,12 +96,10 @@ async function getAllNftTransfers(startBlock: number, endBlock: number) {
 }
 
 async function getAllNftIncreaseLiquidity(startBlock: number, endBlock: number) {
-  console.log(`Fetching all nft increase liquidity between ${startBlock} and ${endBlock}`);
-
   let results = await db.prepare("SELECT * FROM nftIncreaseLiquidity ORDER BY blockNumber").all();
   startBlock = results[results.length - 1]?.blockNumber + 1 || startBlock;
 
-  console.log(`Fetching new events from ${startBlock} to ${endBlock}`);
+  console.log(`- Fetching new nft increase liquidity events from ${startBlock} to ${endBlock}`);
   const newResults = await getAllEvents(uniNftContract, uniNftContract.filters.IncreaseLiquidity(null, null, null, null), startBlock, endBlock);
 
   const statement = await db.prepare("INSERT INTO nftIncreaseLiquidity (blockNumber, tokenId, liquidity) VALUES (?, ?, ?)");
@@ -119,12 +115,10 @@ async function getAllNftIncreaseLiquidity(startBlock: number, endBlock: number) 
 }
 
 async function getAllNftDecreaseLiquidity(startBlock: number, endBlock: number) {
-  console.log(`Fetching all nft decrease liquidity between ${startBlock} and ${endBlock}`);
-
   let results = await db.prepare("SELECT * FROM nftDecreaseLiquidity ORDER BY blockNumber").all();
   startBlock = results[results.length - 1]?.blockNumber + 1 || startBlock;
 
-  console.log(`Fetching new events from ${startBlock} to ${endBlock}`);
+  console.log(`- Fetching new nft decrease liquidity events from ${startBlock} to ${endBlock}`);
   const newResults = await getAllEvents(uniNftContract, uniNftContract.filters.DecreaseLiquidity(null, null, null, null), startBlock, endBlock);
 
   const statement = await db.prepare("INSERT INTO nftDecreaseLiquidity (blockNumber, tokenId, liquidity) VALUES (?, ?, ?)");
@@ -140,12 +134,10 @@ async function getAllNftDecreaseLiquidity(startBlock: number, endBlock: number) 
 }
 
 async function getAllMints(startBlock: number, endBlock: number) {
-  console.log(`Fetching all pool mints between ${startBlock} and ${endBlock}`);
-
   let results = await db.prepare("SELECT * FROM poolMints ORDER BY blockNumber").all();
   startBlock = results[results.length - 1]?.blockNumber + 1 || startBlock;
 
-  console.log(`Fetching new events from ${startBlock} to ${endBlock}`);
+  console.log(`- Fetching new pool mint events from ${startBlock} to ${endBlock}`);
   const newResults = await getAllEvents(poolContract, poolContract.filters.Mint(null, null, null, null, null, null, null), startBlock, endBlock);
 
   const statement = await db.prepare("INSERT INTO poolMints (blockNumber, tickLower, tickUpper) VALUES (?, ?, ?)");

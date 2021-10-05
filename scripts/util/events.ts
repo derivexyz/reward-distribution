@@ -57,7 +57,7 @@ async function getAllNewEvents(
   startBlock =
     (db.prepare(`SELECT MAX("blockNumber") as maxBlock FROM ${eventName}`).get()?.maxBlock || startBlock - 1) + 1;
 
-  console.log(`Fetching all ${eventName} events from ${startBlock} to ${endBlock}`);
+  console.log(`-- Fetching all ${eventName} events from ${startBlock} to ${endBlock}`);
   const newResults = await getAllEvents(contract, filter, startBlock, endBlock);
 
   const statement = await db.prepare(insertEventStatement(eventName, nameTypes));
@@ -67,24 +67,29 @@ async function getAllNewEvents(
 }
 
 export async function cacheAllEventsForLyraContract(
+  deployment: string,
   contractName: string,
-  endblock: number,
+  endBlock: number,
   market?: string,
+  eventFilter?: string[]
 ) {
-  console.log(`Caching all events for ${contractName}`)
+  console.log(`- Caching events for ${contractName}`)
   const db = sqlite3(
     path.join(
       __dirname,
       '../../data/',
-      (!market ? contractName : `${contractName}-${market}`) + '.sqlite',
+      `${deployment}-${(!market ? contractName : `${contractName}-${market}`)}.sqlite`,
     ),
   );
 
-  const contract = await getLyraContract(contractName, market);
-  const deploymentBlock = loadLyraContractDeploymentBlock(contractName, market);
+  const contract = await getLyraContract(deployment, contractName, market);
+  const deploymentBlock = loadLyraContractDeploymentBlock(deployment, contractName, market);
 
   for (const event in contract.interface.events) {
     const eventData = contract.interface.events[event];
+    if (!!eventFilter && !eventFilter.includes(eventData.name)) {
+      continue;
+    }
 
     const nameTypes: [string, string][] = eventData.inputs.map(x => [x.name, 'STRING']);
 
@@ -92,31 +97,30 @@ export async function cacheAllEventsForLyraContract(
     await db.exec(createTable);
 
     const filter = contract.filters[event](...eventData.inputs.map(_ => null));
-    await getAllNewEvents(db, contract, filter, eventData.name, nameTypes, deploymentBlock, endblock);
+    await getAllNewEvents(db, contract, filter, eventData.name, nameTypes, deploymentBlock, endBlock);
   }
 }
 
 export async function getEventsFromLyraContract(
+  deployment: string,
   contractName: string,
   eventName: string,
   filters: { startBlock?: number; endBlock?: number; args?: { [key: string]: any } },
-  market?: string,
+  market?: string
 ) {
   const db = sqlite3(
     path.join(
       __dirname,
       '../../data/',
-      (!market ? contractName : `${contractName}-${market}`) + '.sqlite',
+      `${deployment}-${(!market ? contractName : `${contractName}-${market}`)}.sqlite`,
     ),
   );
 
-  const contract = await getLyraContract(contractName, market);
+  const contract = await getLyraContract(deployment, contractName, market);
   const eventData = Object.values(contract.interface.events).find(x => x.name === eventName);
   if (!eventData) {
     throw Error(`No event ${eventName} for contract ${contractName}-${market}`);
   }
-
-  console.log(`SELECT * FROM ${eventName}`);
 
   return await db.prepare(`SELECT * FROM ${eventName}`).all();
 }

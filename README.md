@@ -43,7 +43,7 @@ The total liquidity of all NFTs that pass the above checks is computed, and then
 To run the lyra option market LP reward script:
 
 ```
-yarn leap3:lyra-sETH
+yarn leap3:lyra-ETH
 ```
 
 ## LEAP-4
@@ -53,6 +53,17 @@ https://leaps.lyra.finance/leaps/leap-4/
 ```
 yarn leap4:uni
 ```
+
+
+## LEAP-6
+
+https://leaps.lyra.finance/leaps/leap-6/
+
+```
+yarn leap6:ETH
+yarn leap6:LINK
+```
+
 
 ### Method
 

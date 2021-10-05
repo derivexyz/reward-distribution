@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "Collection of scripts to help with reward distribution computation",
   "scripts": {
-    "leap3:uni": "OVM_RPC_URL=https://mainnet.optimism.io ts-node scripts/leap3/uni.ts",
-    "leap3:lyra-sETH": "OVM_RPC_URL=https://mainnet.optimism.io ts-node scripts/leap3/lyra.ts",
-    "leap4:uni": "OVM_RPC_URL=https://mainnet.optimism.io ts-node scripts/leap4/uni.ts"
+    "computeRewards": "OVM_RPC_URL=https://mainnet.optimism.io ts-node scripts/computeRewards.ts",
+    "leap3:uni": "yarn computeRewards --leap leap3 --type uni",
+    "leap3:lyra-ETH": "yarn computeRewards --leap leap3 --type lyra --market sETH",
+    "leap4:uni": "yarn computeRewards --leap leap4 --type uni",
+    "leap6:lyra-ETH": "yarn computeRewards --leap leap3 --type lyra --market sETH",
+    "leap6:lyra-LINK": "yarn computeRewards --leap leap3 --type lyra --market sLINK"
   },
   "author": "Lyra Finance",
   "license": "ISC",
