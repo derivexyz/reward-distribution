@@ -32,37 +32,30 @@ async function main(args: string[]) {
       continue;
     }
 
-    for (const leap in all[type]) {
-      if (leapFilter && leap != leapFilter) {
+    for (const market in all[type]) {
+      if (marketFilter && market != marketFilter) {
         continue;
       }
-      if (type == 'lyra') {
-        for (const market in all[type][leap]) {
-          if (marketFilter && market != marketFilter) {
-            continue;
-          }
 
-          // Get Lyra Option market rewards
-          const toCheck = all[type][leap][market];
-          console.log(`Getting ${type} ${market} pool rewards for ${leap}`)
-          const lyraRewards = await getLyraLPRewards(toCheck.deployment, toCheck.roundMaxExpiryTimestamp, toCheck.lyraRewards, market);
-          for (const owner in lyraRewards) {
-            if (!totals[owner]) {
-              totals[owner] = 0;
-            }
-            totals[owner] += lyraRewards[owner]
-          }
+      for (const leap in all[type][market]) {
+        if (leapFilter && leap != leapFilter) {
+          continue;
         }
-      } else {
-        // Get Uniswap pool rewards
-        const toCheck = all[type][leap];
-        console.log(`Getting ${type} pool rewards for ${leap}`)
-        const uniRewards = await getUniLPRewards(toCheck.startDate, toCheck.endDate, toCheck.epochDuration, toCheck.minTick, toCheck.maxTick, toCheck.lyraRewards);
-        for (const owner in uniRewards) {
+        console.log(`Getting ${type} ${market} pool rewards for ${leap}`)
+
+        const toCheck = all[type][market][leap];
+        let rewards;
+        if (type == 'lyra') {
+          rewards = await getLyraLPRewards(toCheck.deployment, toCheck.roundMaxExpiryTimestamp, toCheck.lyraRewards, market);
+        } else {
+          rewards = await getUniLPRewards(toCheck.startDate, toCheck.endDate, toCheck.epochDuration, toCheck.minTick, toCheck.maxTick, toCheck.lyraRewards);
+        }
+
+        for (const owner in rewards) {
           if (!totals[owner]) {
             totals[owner] = 0;
           }
-          totals[owner] += uniRewards[owner]
+          totals[owner] += rewards[owner]
         }
       }
     }
