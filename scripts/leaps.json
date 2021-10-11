@@ -1,28 +1,32 @@
 {
   "lyra": {
-    "sETH": {
-      "leap3": {
+    "sETH": [
+      {
+        "leap": "leap3",
         "deployment": "mainnet-ovm-old",
         "roundMaxExpiryTimestamp": 1633075200,
         "lyraRewards": 375000
       },
-      "leap6": {
+      {
+        "leap": "leap6",
         "deployment": "mainnet-ovm",
         "roundMaxExpiryTimestamp": 1635235200,
         "lyraRewards": 600000
       }
-    },
-    "sLINK": {
-      "leap6": {
+    ],
+    "sLINK": [
+      {
+        "leap": "leap6",
         "deployment": "mainnet-ovm",
         "roundMaxExpiryTimestamp": 1635235200,
         "lyraRewards": 150000
       }
-    }
+    ]
   },
   "uni": {
-    "DAI/sUSD":{
-      "leap3": {
+    "DAI/sUSD":[
+      {
+        "leap": "leap3",
         "startDate": 1631491200,
         "endDate": 1632700800,
         "epochDuration": 10800,
@@ -30,14 +34,24 @@
         "maxTick": 2620,
         "lyraRewards": 375000
       },
-      "leap4": {
+      {
+        "leap": "leap4",
         "startDate": 1632700800,
         "endDate": 1633910400,
         "epochDuration": 10800,
         "minTick": -2230,
         "maxTick": 1820,
         "lyraRewards": 300000
+      },
+      {
+        "leap": "leap4.2",
+        "startDate": 1633910400,
+        "endDate": 1634515200,
+        "epochDuration": 10800,
+        "minTick": -1630,
+        "maxTick": 1400,
+        "lyraRewards": 112500
       }
-    }
+    ]
   }
 }

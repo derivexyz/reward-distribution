@@ -1,8 +1,10 @@
 import {getLyraLPRewards} from "./shared/lyra/getLyraLPRewards";
 import {getUniLPRewards} from "./shared/uniswap/getUniLPRewards";
+import console from "console";
+import chalk from "chalk";
 
 
-function getArg(args: string[], flag: string) {
+function getArg(args: string[], flag: string): string | undefined {
   let result;
   args.forEach((x, i, a) => {
     if (x == flag) {
@@ -20,6 +22,7 @@ async function main(args: string[]) {
   const typeFilter = getArg(args, "--type");
   const leapFilter = getArg(args, "--leap");
   const marketFilter = getArg(args, "--market");
+  const addressFilter = getArg(args, "--address");
 
   console.log({typeFilter, leapFilter, marketFilter});
 
@@ -37,32 +40,35 @@ async function main(args: string[]) {
         continue;
       }
 
-      for (const leap in all[type][market]) {
-        if (leapFilter && leap != leapFilter) {
+      for (const distribution of all[type][market]) {
+        if (leapFilter && distribution.leap != leapFilter) {
           continue;
         }
-        console.log(`Getting ${type} ${market} pool rewards for ${leap}`)
+        console.log(chalk.cyan(`\nGetting ${type} ${market} pool rewards for ${distribution.leap}`));
 
-        const toCheck = all[type][market][leap];
         let rewards;
         if (type == 'lyra') {
-          rewards = await getLyraLPRewards(toCheck.deployment, toCheck.roundMaxExpiryTimestamp, toCheck.lyraRewards, market);
+          rewards = await getLyraLPRewards(distribution.deployment, distribution.roundMaxExpiryTimestamp, distribution.lyraRewards, market);
         } else {
-          rewards = await getUniLPRewards(toCheck.startDate, toCheck.endDate, toCheck.epochDuration, toCheck.minTick, toCheck.maxTick, toCheck.lyraRewards);
+          rewards = await getUniLPRewards(distribution.startDate, distribution.endDate, distribution.epochDuration, distribution.minTick, distribution.maxTick, distribution.lyraRewards);
         }
 
         for (const owner in rewards) {
-          if (!totals[owner]) {
-            totals[owner] = 0;
+          if (!totals[owner.toLowerCase()]) {
+            totals[owner.toLowerCase()] = 0;
           }
-          totals[owner] += rewards[owner]
+          totals[owner.toLowerCase()] += rewards[owner]
         }
       }
     }
   }
 
-  for (const owner in totals) {
-    console.log(`${owner} ${totals[owner]}`);
+  if (!!addressFilter) {
+    console.log(`${addressFilter} ${totals[addressFilter.toLowerCase()] || 0}`);
+  } else {
+    for (const owner in totals) {
+      console.log(`${owner} ${totals[owner]}`);
+    }
   }
 }
 

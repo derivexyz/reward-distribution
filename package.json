@@ -7,8 +7,8 @@
     "leap3:uni": "yarn computeRewards --leap leap3 --type uni",
     "leap3:lyra-ETH": "yarn computeRewards --leap leap3 --type lyra --market sETH",
     "leap4:uni": "yarn computeRewards --leap leap4 --type uni",
-    "leap6:lyra-ETH": "yarn computeRewards --leap leap3 --type lyra --market sETH",
-    "leap6:lyra-LINK": "yarn computeRewards --leap leap3 --type lyra --market sLINK"
+    "leap6:lyra-ETH": "yarn computeRewards --leap leap6 --type lyra --market sETH",
+    "leap6:lyra-LINK": "yarn computeRewards --leap leap6 --type lyra --market sLINK"
   },
   "author": "Lyra Finance",
   "license": "ISC",
