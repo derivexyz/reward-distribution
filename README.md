@@ -7,6 +7,11 @@ Before running anything, you must install all dependencies.
 yarn install
 ```
 
+Then, to compute rewards for a given address over all rewards programs:
+```
+yarn computeRewards --address 0x1234...
+```
+
 ## LEAP-3
 
 https://leaps.lyra.finance/leaps/leap-3/
